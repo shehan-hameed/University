@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- FIX 1: Added viewport meta tag — required for responsive design to actually work on mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fresh Garden Shop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Fresh Garden Produce</h1>
+        <!-- Requirement: 5 Hyperlinks -->
+        <nav>
+            <a href="#home">Home</a> |
+            <a href="#categories">Categories</a> |
+            <a href="#inventory">Inventory</a> |
+            <a href="https://open.uom.lk" target="_blank">Our School</a> |
+            <a href="https://www.google.com" target="_blank">Search</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- Requirement: 5 Images with Responsive Design and Animation -->
+        <section id="home">
+            <h2>Our Top Picks</h2>
+            <div class="image-gallery">
+                <img src="mango.jpg"  class="responsive-img transform-hover" alt="Mango">
+                <img src="apple.jpeg"  class="responsive-img transform-hover" alt="Apple">
+                <img src="banana.jpg" class="responsive-img transform-hover" alt="Banana">
+                <img src="potato.jpg" class="responsive-img transform-hover" alt="Potato">
+                <img src="onion.jpg"  class="responsive-img transform-hover" alt="Onion">
+            </div>
+        </section>
+
+        <!-- Requirement: 1 Ordered/Unordered List -->
+        <section id="categories">
+            <h2>Available Categories</h2>
+            <ol>
+                <li>Fruits:
+                    <ul>
+                        <li>Mango</li>
+                        <li>Apple</li>
+                        <li>Banana</li>
+                    </ul>
+                </li>
+                <li>Vegetables:
+                    <ul>
+                        <li>Potato</li>
+                        <li>Onion</li>
+                    </ul>
+                </li>
+            </ol>
+        </section>
+
+        <!-- Requirement: 1 Table with Data -->
+        <!-- FIX 2: Removed deprecated border="1" attribute — border is now handled in CSS -->
+        <section id="inventory">
+            <h2>Price List</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2">Item Name</th>
+                        <th colspan="2">Price Detail</th>
+                    </tr>
+                    <tr>
+                        <th>Unit</th>
+                        <th>Price ($)</th>
+                    </tr>
+                </thead>
+                <!-- FIX 3: Added all 5 products to match the product list above -->
+                <tbody>
+                    <tr>
+                        <td>Mango</td>
+                        <td>1 kg</td>
+                        <td>5.00</td>
+                    </tr>
+                    <tr>
+                        <td>Apple</td>
+                        <td>1 kg</td>
+                        <td>4.50</td>
+                    </tr>
+                    <tr>
+                        <td>Banana</td>
+                        <td>1 dozen</td>
+                        <td>2.00</td>
+                    </tr>
+                    <tr>
+                        <td>Potato</td>
+                        <td>1 kg</td>
+                        <td>1.50</td>
+                    </tr>
+                    <tr>
+                        <td>Onion</td>
+                        <td>1 kg</td>
+                        <td>1.20</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Requirement: 1 Simple JavaScript function -->
+        <section id="contact">
+            <h3 id="welcome-msg">Ready to order?</h3>
+            <button onclick="greetUser()">Click for a Greeting</button>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
