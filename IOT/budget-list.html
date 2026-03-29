@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Budget List — Smart Classroom System</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green: #1A3A2A;
+    --green-mid: #2D7A56;
+    --green-light: #E8F0EC;
+    --amber: #C8760A;
+    --amber-bg: #FDF3E0;
+    --ink: #111111;
+    --muted: #555555;
+    --rule: #D0D0C8;
+    --paper: #F5F2EB;
+    --white: #FFFFFF;
+    --row-alt: #F7F9F8;
+  }
+
+  body {
+    background: var(--paper);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    padding: 40px 20px 60px;
+  }
+
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--green);
+    border-radius: 10px;
+    padding: 32px 36px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .header-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 10px;
+  }
+
+  .header-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+
+  .header-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 24px;
+  }
+
+  .header-stats {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 18px;
+  }
+
+  .stat-item {}
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 4px;
+  }
+  .stat-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  /* ── Notice ── */
+  .notice {
+    background: var(--amber-bg);
+    border: 1px solid #F0D9A8;
+    border-left: 3px solid var(--amber);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 16px;
+    margin-bottom: 24px;
+    font-size: 12.5px;
+    color: #7A4E10;
+    line-height: 1.6;
+  }
+
+  .notice strong { color: var(--amber); }
+
+  /* ── Section label ── */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--green-mid);
+    margin-bottom: 10px;
+    margin-top: 32px;
+    padding-left: 2px;
+  }
+
+  /* ── Table ── */
+  .table-wrap {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  thead tr {
+    background: var(--green);
+  }
+
+  thead th {
+    font-family: 'DM Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    font-weight: 400;
+    padding: 10px 14px;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  thead th.right { text-align: right; }
+  thead th.center { text-align: center; }
+
+  tbody tr {
+    border-bottom: 1px solid var(--rule);
+    transition: background 0.15s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:nth-child(even) { background: var(--row-alt); }
+  tbody tr:hover { background: #EEF5F1; }
+
+  tbody td {
+    padding: 11px 14px;
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  td.right { text-align: right; font-family: 'DM Mono', monospace; font-size: 12px; }
+  td.center { text-align: center; font-family: 'DM Mono', monospace; font-size: 12px; }
+
+  .item-name {
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  .item-purpose {
+    font-size: 11.5px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .store-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11.5px;
+    color: var(--green-mid);
+    text-decoration: none;
+    font-family: 'DM Mono', monospace;
+    white-space: nowrap;
+  }
+
+  .store-link:hover { text-decoration: underline; color: var(--green); }
+
+  .store-link::after {
+    content: '↗';
+    font-size: 10px;
+    opacity: 0.6;
+  }
+
+  .price-cell {
+    font-family: 'DM Mono', monospace;
+    font-size: 12.5px;
+    color: var(--ink);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .total-cell {
+    font-family: 'DM Mono', monospace;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--green);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  /* ── Subtotal rows ── */
+  .subtotal-row td {
+    background: var(--green-light) !important;
+    border-top: 2px solid var(--green-mid);
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--green);
+    padding: 10px 14px;
+  }
+
+  .subtotal-row td.total-cell {
+    color: var(--green);
+  }
+
+  /* ── Grand total ── */
+  .grand-total {
+    background: var(--green);
+    border-radius: 8px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+  }
+
+  .grand-total-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+  }
+
+  .grand-total-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 22px;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: 0.02em;
+  }
+
+  .grand-total-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    margin-top: 2px;
+    text-align: right;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    margin-top: 32px;
+    border-top: 1px solid var(--rule);
+    padding-top: 16px;
+    font-size: 11px;
+    color: #999;
+    text-align: center;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 680px) {
+    .header { padding: 20px; }
+    thead th, tbody td { padding: 8px 10px; }
+    .store-link { font-size: 10.5px; }
+  }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .header { border-radius: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-eyebrow">Smart Classroom Attendance & Environment System</div>
+    <div class="header-title">Project Budget List</div>
+    <div class="header-sub">All components sourced from Sri Lankan online stores · Prices in LKR</div>
+    <div class="header-stats">
+      <div class="stat-item">
+        <div class="stat-label">Hardware Total</div>
+        <div class="stat-value">Rs. 28,290</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Cloud & Software</div>
+        <div class="stat-value">Rs. 1,500–5,500</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Miscellaneous</div>
+        <div class="stat-value">Rs. 8,250</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Grand Total</div>
+        <div class="stat-value">Rs. 38,040–42,040</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Items</div>
+        <div class="stat-value">14 components</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notice -->
+  <div class="notice">
+    <strong>Note:</strong> Prices are sourced from Sri Lankan electronics stores (tronic.lk, microchip.lk, alphatronic.lk, lk-tronics.com) as of early 2026. Prices may vary — always verify before purchase. Cloud services (Firebase, AWS, HiveMQ) are used on <strong>free tiers</strong> during development; LKR 1,500–5,500 allocated for any overage. The LKR equivalent of the USD project budget (~$172–$192) is approximately <strong>Rs. 50,000–56,000</strong> at current exchange rates; this budget is optimised to come in below that.
+  </div>
+
+  <!-- Section 1: Microcontrollers -->
+  <div class="section-label">01 — Microcontrollers & Camera</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:28%">Component</th>
+          <th style="width:22%">Purpose</th>
+          <th style="width:18%">Store</th>
+          <th class="center" style="width:7%">Qty</th>
+          <th class="right" style="width:12%">Unit Price</th>
+          <th class="right" style="width:13%">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="item-name">ESP32-S3 DevKitC-1 N16R8</div>
+            <div class="item-purpose">Dual-core, 240MHz, Wi-Fi + BLE, USB OTG, 45 GPIO</div>
+          </td>
+          <td class="item-purpose">Main microcontroller for the Classroom Unit and AI Module. Runs firmware, MQTT client, TinyML inference, and sensor control.</td>
+          <td><a class="store-link" href="https://tronic.lk/product/esp32-s3-nano-development-board" target="_blank">tronic.lk</a></td>
+          <td class="center">4</td>
+          <td class="price-cell">Rs. 3,650</td>
+          <td class="total-cell">Rs. 14,600</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">OV2640 Camera Module (ESP32-S3 CAM)</div>
+            <div class="item-purpose">2MP, DVP interface, JPEG output, wide angle</div>
+          </td>
+          <td class="item-purpose">Face detection at classroom door. Streams frames to TinyML on-device, and to AWS Rekognition/DeepFace for cloud recognition.</td>
+          <td><a class="store-link" href="https://alphatronic.lk/product-category/microcontroller/espressif/" target="_blank">alphatronic.lk</a></td>
+          <td class="center">1</td>
+          <td class="price-cell">Rs. 3,950</td>
+          <td class="total-cell">Rs. 3,950</td>
+        </tr>
+        <tr class="subtotal-row">
+          <td colspan="5">Subtotal — Microcontrollers & Camera</td>
+          <td class="total-cell">Rs. 18,550</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Section 2: Sensors -->
+  <div class="section-label">02 — Environmental & Safety Sensors</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:28%">Component</th>
+          <th style="width:22%">Purpose</th>
+          <th style="width:18%">Store</th>
+          <th class="center" style="width:7%">Qty</th>
+          <th class="right" style="width:12%">Unit Price</th>
+          <th class="right" style="width:13%">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="item-name">DHT22 / AM2302 Sensor Module</div>
+            <div class="item-purpose">±0.5°C accuracy, 0–100% RH humidity range</div>
+          </td>
+          <td class="item-purpose">Monitors classroom temperature and humidity. Data fed to the environment optimisation ML model to control AC and fans via relay.</td>
+          <td><a class="store-link" href="https://tronic.lk/product/dht22-am2302-digital-temperature-and-humidity-sensor-mo" target="_blank">tronic.lk</a></td>
+          <td class="center">2</td>
+          <td class="price-cell">Rs. 1,160</td>
+          <td class="total-cell">Rs. 2,320</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">MQ-135 Air Quality Sensor Module</div>
+            <div class="item-purpose">Detects CO₂, NH₃, benzene, alcohol vapour, smoke</div>
+          </td>
+          <td class="item-purpose">Monitors classroom CO₂ and air quality. Triggers ventilation relay when thresholds are exceeded. Feeds environment ML model.</td>
+          <td><a class="store-link" href="https://tronic.lk/product/mq-135-air-quality-benzene-alcohol-smoke-hazardous-gas-" target="_blank">tronic.lk</a></td>
+          <td class="center">2</td>
+          <td class="price-cell">Rs. 650</td>
+          <td class="total-cell">Rs. 1,300</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">BH1750FVI Digital Light Sensor</div>
+            <div class="item-purpose">I²C, 16-bit ADC, 0–65535 lux range, 3–5V</div>
+          </td>
+          <td class="item-purpose">Measures ambient light level in the classroom. Controls lighting relay based on daylight and occupancy conditions.</td>
+          <td><a class="store-link" href="https://tronic.lk/product/bh1750fvi-digital-light-intensity-sensor-module-3-5v" target="_blank">tronic.lk</a></td>
+          <td class="center">2</td>
+          <td class="price-cell">Rs. 490</td>
+          <td class="total-cell">Rs. 980</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">Sound / Microphone Sensor Module</div>
+            <div class="item-purpose">Analog + digital output, adjustable sensitivity</div>
+          </td>
+          <td class="item-purpose">Monitors classroom noise level. Input to the environment optimisation model; alerts if noise exceeds classroom threshold.</td>
+          <td><a class="store-link" href="https://tronic.lk/product/voice-sound-detection-mic-sensor-module-for-arduino" target="_blank">tronic.lk</a></td>
+          <td class="center">2</td>
+          <td class="price-cell">Rs. 330</td>
+          <td class="total-cell">Rs. 660</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">MQ-2 Smoke / Gas Sensor Module</div>
+            <div class="item-purpose">Detects LPG, smoke, alcohol, propane, hydrogen, CO</div>
+          </td>
+          <td class="item-purpose">Fire and smoke detection for the evacuation system. Triggers emergency headcount protocol and warden panel alert when activated.</td>
+          <td><a class="store-link" href="https://tronic.lk/product/mq-2-smoke-lpg-co-gas-sensor-only-sensor" target="_blank">tronic.lk</a></td>
+          <td class="center">1</td>
+          <td class="price-cell">Rs. 580</td>
+          <td class="total-cell">Rs. 580</td>
+        </tr>
+        <tr class="subtotal-row">
+          <td colspan="5">Subtotal — Environmental & Safety Sensors</td>
+          <td class="total-cell">Rs. 5,840</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Section 3: Actuators & Control -->
+  <div class="section-label">03 — Actuators & Control Modules</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:28%">Component</th>
+          <th style="width:22%">Purpose</th>
+          <th style="width:18%">Store</th>
+          <th class="center" style="width:7%">Qty</th>
+          <th class="right" style="width:12%">Unit Price</th>
+          <th class="right" style="width:13%">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="item-name">Solenoid Door Lock (12VDC)</div>
+            <div class="item-purpose">12V, 0.4A, 27×15×17mm, 1s unlock time</div>
+          </td>
+          <td class="item-purpose">Smart door access control at classroom entrance. Unlocks on verified face match, auto-locks after class starts. Triggered via relay from ESP32-S3.</td>
+          <td><a class="store-link" href="https://tronic.lk/product/solenoid-door-lock-12vdc-27x15x17mm" target="_blank">tronic.lk</a></td>
+          <td class="center">1</td>
+          <td class="price-cell">Rs. 1,400</td>
+          <td class="total-cell">Rs. 1,400</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">5VDC 4-Channel Relay Module</div>
+            <div class="item-purpose">Optocoupler isolation, 10A/250VAC, LED indicators</div>
+          </td>
+          <td class="item-purpose">Controls AC, ceiling fan, lights, and door lock via ESP32-S3 GPIO. Two units provide 8 switchable channels for all classroom appliances.</td>
+          <td><a class="store-link" href="https://tronic.lk/product/5vdc-4-way-4-channel-relay-module-with-coupling-protect" target="_blank">tronic.lk</a></td>
+          <td class="center">2</td>
+          <td class="price-cell">Rs. 530</td>
+          <td class="total-cell">Rs. 1,060</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">Active Buzzer Module</div>
+            <div class="item-purpose">3.5–5.5V, 85dB, 2500Hz, transistor-driven</div>
+          </td>
+          <td class="item-purpose">Local audio alerts for door access status (granted/denied) and emergency evacuation signals when fire/smoke is detected.</td>
+          <td><a class="store-link" href="https://tronic.lk/product/buzzer-module-small-for-arduino" target="_blank">tronic.lk</a></td>
+          <td class="center">2</td>
+          <td class="price-cell">Rs. 200</td>
+          <td class="total-cell">Rs. 400</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">LED Indicators — Red & Green (pack)</div>
+            <div class="item-purpose">5mm through-hole, 2.2V/3.4V forward voltage</div>
+          </td>
+          <td class="item-purpose">Door access status display at entrance. Green = access granted / door unlocked. Red = access denied / door locked.</td>
+          <td><a class="store-link" href="https://microchip.lk" target="_blank">microchip.lk</a></td>
+          <td class="center">1 set</td>
+          <td class="price-cell">Rs. 180</td>
+          <td class="total-cell">Rs. 180</td>
+        </tr>
+        <tr class="subtotal-row">
+          <td colspan="5">Subtotal — Actuators & Control</td>
+          <td class="total-cell">Rs. 3,040</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Section 4: Power & Infrastructure -->
+  <div class="section-label">04 — Power Supply & Infrastructure</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:28%">Component</th>
+          <th style="width:22%">Purpose</th>
+          <th style="width:18%">Store</th>
+          <th class="center" style="width:7%">Qty</th>
+          <th class="right" style="width:12%">Unit Price</th>
+          <th class="right" style="width:13%">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="item-name">DC Power Supply Adapter (5V / 12V dual)</div>
+            <div class="item-purpose">5V for ESP32-S3 & modules, 12V for solenoid lock</div>
+          </td>
+          <td class="item-purpose">Provides stable 5V and 12V rails to all hardware units. Required to power the solenoid lock, relay modules, and both ESP32-S3 boards simultaneously.</td>
+          <td><a class="store-link" href="https://microchip.lk" target="_blank">microchip.lk</a></td>
+          <td class="center">2</td>
+          <td class="price-cell">Rs. 1,800</td>
+          <td class="total-cell">Rs. 3,600</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">Jumper Wires Set (Male-Male, M-F, F-F)</div>
+            <div class="item-purpose">40-pin ribbon cables, various lengths</div>
+          </td>
+          <td class="item-purpose">Wiring connections between ESP32-S3 GPIO pins and sensor/module breakout boards during prototyping and final assembly.</td>
+          <td><a class="store-link" href="https://tronic.lk" target="_blank">tronic.lk</a></td>
+          <td class="center">1 set</td>
+          <td class="price-cell">Rs. 560</td>
+          <td class="total-cell">Rs. 560</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">Prototype PCB / Breadboard Set</div>
+            <div class="item-purpose">830-point breadboard + 5×7cm PCB boards</div>
+          </td>
+          <td class="item-purpose">Prototyping and semi-permanent circuit assembly for sensor connections. Used before final soldered board is prepared for deployment.</td>
+          <td><a class="store-link" href="https://tronic.lk" target="_blank">tronic.lk</a></td>
+          <td class="center">1 set</td>
+          <td class="price-cell">Rs. 400</td>
+          <td class="total-cell">Rs. 400</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">Project Enclosure / Casing (ABS Plastic)</div>
+            <div class="item-purpose">~150×100×70mm, wall-mountable, ventilated</div>
+          </td>
+          <td class="item-purpose">Houses and protects the hardware units for real classroom deployment. One unit for door-mounted face recognition module, one for the environment sensor hub.</td>
+          <td><a class="store-link" href="https://lk-tronics.com" target="_blank">lk-tronics.com</a></td>
+          <td class="center">2</td>
+          <td class="price-cell">Rs. 1,450</td>
+          <td class="total-cell">Rs. 2,900</td>
+        </tr>
+        <tr class="subtotal-row">
+          <td colspan="5">Subtotal — Power & Infrastructure</td>
+          <td class="total-cell">Rs. 7,460</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Section 5: Cloud & Misc -->
+  <div class="section-label">05 — Cloud Services & Miscellaneous</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:28%">Item</th>
+          <th style="width:22%">Purpose</th>
+          <th style="width:18%">Source</th>
+          <th class="center" style="width:7%">Qty</th>
+          <th class="right" style="width:12%">Est. Cost</th>
+          <th class="right" style="width:13%">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="item-name">Firebase / AWS (free tier + overage)</div>
+            <div class="item-purpose">Realtime database, hosting, cloud functions</div>
+          </td>
+          <td class="item-purpose">Cloud backend for attendance records, sensor logs, user accounts, and REST API. Free tier used for development; allocation for production overage.</td>
+          <td><a class="store-link" href="https://firebase.google.com" target="_blank">firebase.google.com</a></td>
+          <td class="center">—</td>
+          <td class="price-cell">Rs. 0–2,000</td>
+          <td class="total-cell">Rs. 0–2,000</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">HiveMQ / EMQX MQTT Broker</div>
+            <div class="item-purpose">Free tier: 10 connections, 10GB data/month</div>
+          </td>
+          <td class="item-purpose">MQTT message broker for ESP32-S3 to cloud communication. Handles real-time sensor data streaming and control commands between devices.</td>
+          <td><a class="store-link" href="https://www.hivemq.com" target="_blank">hivemq.com</a></td>
+          <td class="center">—</td>
+          <td class="price-cell">Rs. 0</td>
+          <td class="total-cell">Rs. 0</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">AWS Rekognition (free tier)</div>
+            <div class="item-purpose">5,000 images/month free for 12 months</div>
+          </td>
+          <td class="item-purpose">Cloud face recognition for attendance matching. Free tier sufficient for testing; minimal charges if exceeded during final deployment.</td>
+          <td><a class="store-link" href="https://aws.amazon.com/rekognition/" target="_blank">aws.amazon.com</a></td>
+          <td class="center">—</td>
+          <td class="price-cell">Rs. 0–3,500</td>
+          <td class="total-cell">Rs. 0–3,500</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">Printing, Labels & Documentation</div>
+            <div class="item-purpose">Report printing, component labelling, posters</div>
+          </td>
+          <td class="item-purpose">Printing project proposal, reports, component labels, and enclosure markings for final deployment and presentation.</td>
+          <td><a class="store-link" href="https://www.vistaprint.lk" target="_blank">Local print shop</a></td>
+          <td class="center">—</td>
+          <td class="price-cell">Rs. 2,500</td>
+          <td class="total-cell">Rs. 2,500</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">Spare Components & Replacements</div>
+            <div class="item-purpose">Resistors, capacitors, extra wires, solder</div>
+          </td>
+          <td class="item-purpose">Buffer for damaged or faulty components during prototyping. Includes soldering wire, resistors, heat shrink, and spare sensor units.</td>
+          <td><a class="store-link" href="https://tronic.lk" target="_blank">tronic.lk</a></td>
+          <td class="center">—</td>
+          <td class="price-cell">Rs. 3,250</td>
+          <td class="total-cell">Rs. 3,250</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">Tools (soldering iron, multimeter)</div>
+            <div class="item-purpose">If not already available in the team</div>
+          </td>
+          <td class="item-purpose">Basic tools for hardware assembly and debugging. Included in budget if the team does not already own them; shared across both semesters.</td>
+          <td><a class="store-link" href="https://microchip.lk" target="_blank">microchip.lk</a></td>
+          <td class="center">—</td>
+          <td class="price-cell">Rs. 2,500</td>
+          <td class="total-cell">Rs. 2,500</td>
+        </tr>
+        <tr class="subtotal-row">
+          <td colspan="5">Subtotal — Cloud & Miscellaneous</td>
+          <td class="total-cell">Rs. 8,250–13,750</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Grand Total -->
+  <div class="grand-total">
+    <div>
+      <div class="grand-total-label">Grand Total — All Categories</div>
+      <div class="grand-total-sub">Hardware + Cloud + Miscellaneous</div>
+    </div>
+    <div style="text-align:right">
+      <div class="grand-total-value">Rs. 38,040 – 43,540</div>
+      <div class="grand-total-sub">≈ USD $130 – $148 at current rates</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    Budget compiled from tronic.lk · microchip.lk · alphatronic.lk · lk-tronics.com — as of early 2026<br>
+    Smart Classroom Attendance & Environment System · B25 FIT Level 01 · University IoT + AI Group Project
+  </div>
+
+</div>
+</body>
+</html>

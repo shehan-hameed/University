@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Proposal — Smart Classroom System</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0f0e;
+    --paper: #f5f2eb;
+    --paper-dark: #ece8de;
+    --accent: #1a4f3a;
+    --accent-light: #e8f0ec;
+    --accent-mid: #2d7a56;
+    --amber: #c8760a;
+    --amber-light: #fdf3e3;
+    --rule: #c5bfaf;
+    --muted: #6b6358;
+    --white: #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    min-height: 100vh;
+    background: var(--accent);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 60px;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+  }
+
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .cover::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .cover-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .cover-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+  }
+
+  .cover-id {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    text-align: right;
+  }
+
+  .cover-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 0 40px;
+  }
+
+  .cover-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent-mid);
+    margin-bottom: 24px;
+  }
+
+  .cover-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(42px, 6vw, 72px);
+    line-height: 1.05;
+    color: var(--white);
+    max-width: 700px;
+    margin-bottom: 8px;
+  }
+
+  .cover-title em {
+    font-style: italic;
+    color: rgba(255,255,255,0.55);
+  }
+
+  .cover-subtitle {
+    font-size: 16px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 20px;
+    max-width: 480px;
+    line-height: 1.6;
+  }
+
+  .cover-rule {
+    width: 48px;
+    height: 2px;
+    background: var(--accent-mid);
+    margin: 32px 0;
+  }
+
+  .cover-bottom {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 32px;
+  }
+
+  .cover-meta-item {}
+  .cover-meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    margin-bottom: 6px;
+  }
+  .cover-meta-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.8);
+  }
+
+  /* ── BODY ── */
+  .body-wrap {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 80px 40px;
+  }
+
+  /* Section header */
+  .section {
+    margin-bottom: 64px;
+  }
+
+  .section-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--accent-mid);
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    line-height: 1.15;
+    color: var(--ink);
+    border-bottom: 1.5px solid var(--rule);
+    padding-bottom: 16px;
+    margin-bottom: 28px;
+  }
+
+  p {
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+
+  p:last-child { margin-bottom: 0; }
+
+  /* Highlight box */
+  .highlight {
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 20px 24px;
+    border-radius: 0 6px 6px 0;
+    margin: 28px 0;
+  }
+
+  .highlight p { color: var(--accent); font-weight: 500; margin: 0; }
+
+  /* Feature grid */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 28px 0;
+  }
+
+  .feature-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 20px;
+    transition: border-color 0.2s;
+  }
+
+  .feature-card:hover { border-color: var(--accent-mid); }
+
+  .feature-icon {
+    font-size: 22px;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .feature-name {
+    font-family: 'Instrument Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .feature-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* Team table */
+  .team-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 28px 0;
+    font-size: 14px;
+  }
+
+  .team-table thead tr {
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .team-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 10px 16px 10px 0;
+    text-align: left;
+    font-weight: 400;
+  }
+
+  .team-table td {
+    padding: 14px 16px 14px 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+
+  .dept-badge {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  .dept-ai { background: #e8eaf6; color: #3949ab; }
+  .dept-it { background: #e8f5e9; color: #2e7d32; }
+  .dept-itm { background: #fff3e0; color: #e65100; }
+
+  /* Hardware table */
+  .hw-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 28px 0;
+    font-size: 13.5px;
+  }
+
+  .hw-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 8px 12px 8px 0;
+    text-align: left;
+    font-weight: 400;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .hw-table td {
+    padding: 11px 12px 11px 0;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink);
+    vertical-align: top;
+  }
+
+  .hw-table tr:last-child td {
+    border-bottom: none;
+    font-weight: 600;
+    border-top: 2px solid var(--ink);
+    background: var(--paper-dark);
+    padding-top: 14px;
+  }
+
+  .hw-table td:last-child, .hw-table th:last-child {
+    text-align: right;
+    padding-right: 0;
+  }
+
+  /* Budget bars */
+  .budget-section { margin: 28px 0; }
+
+  .budget-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+
+  .budget-label {
+    font-size: 13px;
+    color: var(--ink);
+    min-width: 220px;
+  }
+
+  .budget-bar-wrap {
+    flex: 1;
+    height: 8px;
+    background: var(--paper-dark);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .budget-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s ease;
+  }
+
+  .budget-amt {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    min-width: 60px;
+    text-align: right;
+  }
+
+  /* Tech stack */
+  .stack-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 28px 0;
+  }
+
+  .stack-box {
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 18px 20px;
+    background: var(--white);
+  }
+
+  .stack-box-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent-mid);
+    margin-bottom: 12px;
+  }
+
+  .stack-box ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .stack-box li {
+    font-size: 13px;
+    color: var(--muted);
+    padding: 4px 0;
+    border-bottom: 1px solid var(--paper-dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .stack-box li:last-child { border-bottom: none; }
+
+  .stack-box li::before {
+    content: '';
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--accent-mid);
+    flex-shrink: 0;
+  }
+
+  /* Timeline */
+  .timeline { margin: 28px 0; }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 24px;
+    margin-bottom: 0;
+    position: relative;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 120px;
+    top: 24px;
+    bottom: -28px;
+    width: 1px;
+    background: var(--rule);
+    transform: translateX(-50%);
+  }
+
+  .timeline-item:last-child::before { display: none; }
+
+  .timeline-period {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    padding-top: 6px;
+    text-align: right;
+    line-height: 1.4;
+  }
+
+  .timeline-content {
+    padding: 0 0 32px 28px;
+    position: relative;
+  }
+
+  .timeline-content::before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: 8px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--paper);
+    outline: 1px solid var(--accent);
+  }
+
+  .timeline-phase {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .timeline-tasks {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* Requirements checklist */
+  .req-list {
+    list-style: none;
+    padding: 0;
+    margin: 28px 0;
+  }
+
+  .req-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 14px;
+  }
+
+  .req-list li:last-child { border-bottom: none; }
+
+  .req-check {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .req-check svg { width: 10px; height: 10px; }
+
+  .req-text { color: var(--ink); }
+  .req-note { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* Objectives */
+  .obj-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 28px 0;
+  }
+
+  .obj-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .obj-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .obj-label {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* Amber callout */
+  .amber-box {
+    background: var(--amber-light);
+    border: 1px solid #f0d9a8;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 28px 0;
+  }
+
+  .amber-box-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 10px;
+  }
+
+  .amber-box p { color: #7a4e10; font-size: 13.5px; margin: 0; }
+
+  /* Footer */
+  .doc-footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.35);
+    padding: 32px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+
+  /* Divider */
+  hr.section-divider {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 48px 0;
+  }
+
+  @media print {
+    .cover { min-height: 100vh; }
+    body { background: white; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ COVER ══ -->
+<div class="cover">
+  <div class="cover-top">
+    <span class="cover-label">Project Proposal</span>
+    <div class="cover-id">
+      REF: IoT-AI-2025<br>
+      Ver. 1.0
+    </div>
+  </div>
+
+  <div class="cover-main">
+    <div class="cover-eyebrow">University IoT + AI Group Project</div>
+    <h1 class="cover-title">Smart Classroom<br><em>Attendance &</em><br>Environment System</h1>
+    <div class="cover-rule"></div>
+    <p class="cover-subtitle">An intelligent, sensor-driven classroom management platform integrating face recognition attendance, smart access control, and real-time environment monitoring.</p>
+  </div>
+
+  <div class="cover-bottom">
+    <div class="cover-meta-item">
+      <div class="cover-meta-label">Duration</div>
+      <div class="cover-meta-value">2 Semesters</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="cover-meta-label">Team Size</div>
+      <div class="cover-meta-value">5 Members</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="cover-meta-label">Budget</div>
+      <div class="cover-meta-value">~$172–$192</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="cover-meta-label">Platform</div>
+      <div class="cover-meta-value">ESP32-S3 + Cloud</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BODY ══ -->
+<div class="body-wrap">
+
+  <!-- 1. Executive Summary -->
+  <div class="section">
+    <div class="section-number">01</div>
+    <h2 class="section-title">Executive Summary</h2>
+    <p>The Smart Classroom Attendance & Environment System is a university-scale IoT and AI project designed to automate the most friction-heavy aspects of classroom management. By combining embedded hardware, cloud AI, and a suite of user-facing applications, the system removes the need for manual attendance taking, optimises the classroom environment in real time, and enhances campus security.</p>
+    <p>Deployed in a real university classroom at 1:1 scale, this system addresses three core institutional pain points: inefficient manual attendance, unnecessary energy consumption, and gaps in campus safety during emergencies.</p>
+
+    <div class="highlight">
+      <p>The project is designed to keep all five team members fully occupied across two semesters, spanning hardware engineering, AI/ML development, cloud infrastructure, and multi-platform UI design.</p>
+    </div>
+
+    <div class="obj-grid">
+      <div class="obj-card">
+        <div class="obj-number">5</div>
+        <div class="obj-label">Core feature modules across hardware, AI & software</div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-number">2</div>
+        <div class="obj-label">ESP32-S3 units — classroom unit & dedicated AI module</div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-number">6+</div>
+        <div class="obj-label">Output interfaces serving students, staff & guardians</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Problem Statement -->
+  <div class="section">
+    <div class="section-number">02</div>
+    <h2 class="section-title">Problem Statement</h2>
+    <p>University classrooms continue to rely on outdated, manual processes for managing attendance, controlling environmental conditions, and ensuring student safety. These gaps result in measurable institutional costs:</p>
+
+    <ul class="req-list">
+      <li>
+        <div class="req-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="req-text">Manual attendance is slow, error-prone and easily falsified</div>
+          <div class="req-note">Lecturers spend 5–10 minutes per session on roll calls; proxy attendance is common</div>
+        </div>
+      </li>
+      <li>
+        <div class="req-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="req-text">Classrooms waste energy when unoccupied or under-occupied</div>
+          <div class="req-note">AC, lighting and fans run continuously regardless of actual occupancy</div>
+        </div>
+      </li>
+      <li>
+        <div class="req-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="req-text">Emergency evacuation headcounts are unreliable</div>
+          <div class="req-note">No real-time record of who is in which room makes emergency response difficult</div>
+        </div>
+      </li>
+      <li>
+        <div class="req-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="req-text">Chronic absenteeism goes undetected until it is too late</div>
+          <div class="req-note">No automated alert pipeline to students, parents or academic advisors</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 3. Project Objectives -->
+  <div class="section">
+    <div class="section-number">03</div>
+    <h2 class="section-title">Project Objectives</h2>
+    <p>The system is designed to deliver on the following primary objectives:</p>
+    <ul class="req-list">
+      <li>
+        <div class="req-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="req-text">Automate attendance capture using AI-powered face recognition — eliminating manual roll calls entirely</div>
+      </li>
+      <li>
+        <div class="req-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="req-text">Enforce time-based smart access control via a solenoid door lock integrated with the attendance system</div>
+      </li>
+      <li>
+        <div class="req-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="req-text">Monitor and automatically control classroom climate (temperature, CO₂, light, noise) based on occupancy and sensor data</div>
+      </li>
+      <li>
+        <div class="req-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="req-text">Deliver automated absence notifications to students and escalate to parents/guardians when thresholds are exceeded</div>
+      </li>
+      <li>
+        <div class="req-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="req-text">Provide a live evacuation headcount dashboard for safety wardens during fire or emergency events</div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 4. Features -->
+  <div class="section">
+    <div class="section-number">04</div>
+    <h2 class="section-title">Feature Modules</h2>
+    <p>The system is composed of six distinct feature modules, each forming a standalone workstream with cross-module integration at the cloud layer.</p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <span class="feature-icon">📷</span>
+        <div class="feature-name">Face Recognition Attendance</div>
+        <p class="feature-desc">OV2640 camera at the classroom door captures faces. TinyML performs on-device detection; cloud AI (AWS Rekognition / DeepFace) handles recognition and matches against the registered student database. Attendance is logged, cross-referenced with the schedule, and late arrivals are flagged automatically.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🔐</span>
+        <div class="feature-name">Smart Access Control</div>
+        <p class="feature-desc">A solenoid door lock is released only on verified face match. The door auto-locks after class begins. Any unrecognised entry attempt triggers a real-time security alert to the admin panel and logs the event with a timestamped image.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🌿</span>
+        <div class="feature-name">Environment Monitoring & Control</div>
+        <p class="feature-desc">DHT22, MQ135, BH1750 and sound sensors feed live data to the ESP32-S3. A relay module automatically adjusts AC, fans and lighting based on ML-driven occupancy and comfort thresholds. All readings are logged to the cloud dashboard.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🔔</span>
+        <div class="feature-name">Late & Absence Notifications</div>
+        <p class="feature-desc">Students receive an automated app notification or SMS if they are marked absent. A configurable threshold triggers escalation to parents or guardians. Persistent absence patterns are flagged to the academic warning system.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🏃</span>
+        <div class="feature-name">Evacuation & Emergency Headcount</div>
+        <p class="feature-desc">When a fire or smoke alarm triggers, the system takes a snapshot of the current room occupancy. A live headcount dashboard is presented to safety wardens, with missing persons automatically flagged and a downloadable emergency report generated.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🧠</span>
+        <div class="feature-name">AI & ML Pipeline</div>
+        <p class="feature-desc">On-device TinyML (ESP-WHO) handles real-time face detection. Cloud models handle recognition, environment optimisation, attendance-based dropout risk prediction, and anomaly detection for unauthorised access patterns.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Team & Roles -->
+  <div class="section">
+    <div class="section-number">05</div>
+    <h2 class="section-title">Team Structure & Role Division</h2>
+    <p>The five-member team spans three academic departments, with roles assigned to maximise departmental strengths and ensure no member has overlapping responsibilities.</p>
+
+    <table class="team-table">
+      <thead>
+        <tr>
+          <th>Member</th>
+          <th>Dept.</th>
+          <th>Responsibilities</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>AI Member</td>
+          <td><span class="dept-badge dept-ai">AI</span></td>
+          <td>Face recognition model, TinyML (ESP-WHO), dropout predictor, environment optimisation ML, anomaly detection</td>
+        </tr>
+        <tr>
+          <td>IT Member</td>
+          <td><span class="dept-badge dept-it">IT</span></td>
+          <td>ESP32-S3 hardware setup, sensor wiring, relay control, MQTT firmware, cloud backend, database, REST API, data pipeline</td>
+        </tr>
+        <tr>
+          <td>ITM Member 1</td>
+          <td><span class="dept-badge dept-itm">ITM</span></td>
+          <td>Admin web dashboard, student mobile app, warden evacuation panel, UX design</td>
+        </tr>
+        <tr>
+          <td>ITM Member 2</td>
+          <td><span class="dept-badge dept-itm">ITM</span></td>
+          <td>Security module, system testing, technical documentation, project management, parent/guardian portal</td>
+        </tr>
+        <tr>
+          <td>ITM Member 3</td>
+          <td><span class="dept-badge dept-itm">ITM</span></td>
+          <td>System integration, reporting, stakeholder communication, deployment coordination</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 6. Hardware -->
+  <div class="section">
+    <div class="section-number">06</div>
+    <h2 class="section-title">Hardware Components</h2>
+    <p>All hardware is selected for availability, cost-efficiency, and compatibility with the ESP32-S3 ecosystem. The total hardware budget is kept under $120.</p>
+
+    <table class="hw-table">
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Purpose</th>
+          <th style="text-align:center">Qty</th>
+          <th>Est. Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>ESP32-S3 Dev Board</td><td>Main microcontroller — classroom + AI unit</td><td style="text-align:center">4</td><td>$32</td></tr>
+        <tr><td>OV2640 Camera Module</td><td>Face detection at classroom door</td><td style="text-align:center">1</td><td>$6</td></tr>
+        <tr><td>DHT22 Sensor</td><td>Temperature & humidity monitoring</td><td style="text-align:center">2</td><td>$6</td></tr>
+        <tr><td>MQ135 Gas Sensor</td><td>CO₂ / air quality</td><td style="text-align:center">2</td><td>$6</td></tr>
+        <tr><td>BH1750 Light Sensor</td><td>Ambient light level</td><td style="text-align:center">2</td><td>$4</td></tr>
+        <tr><td>Sound Sensor Module</td><td>Classroom noise level</td><td style="text-align:center">2</td><td>$4</td></tr>
+        <tr><td>MQ2 Smoke Sensor</td><td>Fire & smoke detection</td><td style="text-align:center">1</td><td>$3</td></tr>
+        <tr><td>Solenoid Door Lock</td><td>Smart access control</td><td style="text-align:center">1</td><td>$8</td></tr>
+        <tr><td>4-Channel Relay Module</td><td>Control AC, lights, fan, lock</td><td style="text-align:center">2</td><td>$8</td></tr>
+        <tr><td>LED Indicators (R/G)</td><td>Door access status display</td><td style="text-align:center">1 set</td><td>$1</td></tr>
+        <tr><td>Buzzer Module</td><td>Local audio alerts</td><td style="text-align:center">2</td><td>$2</td></tr>
+        <tr><td>Jumper Wires + PCB</td><td>Wiring & prototyping</td><td style="text-align:center">1 set</td><td>$5</td></tr>
+        <tr><td>Power Supply (5V/12V)</td><td>Power for all modules</td><td style="text-align:center">2</td><td>$12</td></tr>
+        <tr><td>Enclosure / Casing</td><td>Housing for hardware units</td><td style="text-align:center">2</td><td>$20</td></tr>
+        <tr><td colspan="3"><strong>Hardware Subtotal</strong></td><td><strong>~$117</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 7. Tech Stack -->
+  <div class="section">
+    <div class="section-number">07</div>
+    <h2 class="section-title">Technology Stack</h2>
+    <p>The system is built on a layered architecture — embedded firmware at the edge, MQTT for device communication, REST APIs for application integration, and cloud AI for heavy inference tasks.</p>
+
+    <div class="stack-grid">
+      <div class="stack-box">
+        <div class="stack-box-title">Edge / Firmware</div>
+        <ul>
+          <li>ESP32-S3 (Arduino / ESP-IDF)</li>
+          <li>ESP-WHO (TinyML face detection)</li>
+          <li>MQTT client (HiveMQ / EMQX)</li>
+          <li>OV2640 camera driver</li>
+          <li>DHT22, BH1750, MQ135 libraries</li>
+        </ul>
+      </div>
+      <div class="stack-box">
+        <div class="stack-box-title">Cloud & Backend</div>
+        <ul>
+          <li>Firebase / AWS (database & hosting)</li>
+          <li>HiveMQ / EMQX (MQTT broker)</li>
+          <li>AWS Rekognition / DeepFace</li>
+          <li>REST API (dashboard & app layer)</li>
+          <li>ML models (dropout, anomaly, env)</li>
+        </ul>
+      </div>
+      <div class="stack-box">
+        <div class="stack-box-title">Frontend Interfaces</div>
+        <ul>
+          <li>Admin web dashboard</li>
+          <li>Student mobile app</li>
+          <li>Warden evacuation panel</li>
+          <li>Parent / guardian portal</li>
+          <li>Security alert panel</li>
+        </ul>
+      </div>
+      <div class="stack-box">
+        <div class="stack-box-title">Notifications & Comms</div>
+        <ul>
+          <li>SMS gateway integration</li>
+          <li>Push notification service</li>
+          <li>Email alerts</li>
+          <li>Academic system webhook</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. Budget -->
+  <div class="section">
+    <div class="section-number">08</div>
+    <h2 class="section-title">Budget Summary</h2>
+    <p>Total project cost is estimated between <strong>$172 and $192 USD</strong>, covering hardware, cloud services (using free tiers where possible), and miscellaneous costs.</p>
+
+    <div class="budget-section">
+      <div class="budget-row">
+        <span class="budget-label">Hardware Components</span>
+        <div class="budget-bar-wrap">
+          <div class="budget-bar" style="width: 61%; background: var(--accent);"></div>
+        </div>
+        <span class="budget-amt">~$117</span>
+      </div>
+      <div class="budget-row">
+        <span class="budget-label">Cloud & Software (free tiers)</span>
+        <div class="budget-bar-wrap">
+          <div class="budget-bar" style="width: 16%; background: var(--accent-mid);"></div>
+        </div>
+        <span class="budget-amt">~$10–30</span>
+      </div>
+      <div class="budget-row">
+        <span class="budget-label">Miscellaneous (tools, printing)</span>
+        <div class="budget-bar-wrap">
+          <div class="budget-bar" style="width: 23%; background: #8abeaa;"></div>
+        </div>
+        <span class="budget-amt">~$45</span>
+      </div>
+    </div>
+
+    <div class="amber-box">
+      <div class="amber-box-title">Note on Cloud Costs</div>
+      <p>AWS Rekognition and Firebase are both used within free-tier limits during development and testing. Any overage during final deployment is accounted for in the $10–30 cloud budget allocation.</p>
+    </div>
+  </div>
+
+  <!-- 9. Timeline -->
+  <div class="section">
+    <div class="section-number">09</div>
+    <h2 class="section-title">Project Timeline</h2>
+    <p>The project runs across two semesters. Semester 1 focuses on hardware, core firmware, and AI model development. Semester 2 focuses on cloud integration, UI development, and deployment.</p>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-period">Sem 1<br>Weeks 1–3</div>
+        <div class="timeline-content">
+          <div class="timeline-phase">Planning & Architecture</div>
+          <div class="timeline-tasks">System design, component procurement, environment setup, architecture diagrams, role finalisation.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-period">Sem 1<br>Weeks 4–7</div>
+        <div class="timeline-content">
+          <div class="timeline-phase">Hardware & Firmware Development</div>
+          <div class="timeline-tasks">ESP32-S3 setup, sensor wiring, relay control, MQTT integration, OV2640 camera driver, TinyML on-device face detection.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-period">Sem 1<br>Weeks 8–12</div>
+        <div class="timeline-content">
+          <div class="timeline-phase">AI Model Development</div>
+          <div class="timeline-tasks">Face recognition model training, dataset collection, DeepFace / AWS Rekognition integration, dropout predictor, anomaly detection, environment optimisation model.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-period">Sem 2<br>Weeks 1–5</div>
+        <div class="timeline-content">
+          <div class="timeline-phase">Cloud Backend & APIs</div>
+          <div class="timeline-tasks">Firebase / AWS database setup, REST API development, MQTT broker configuration, data pipeline, notification service integration.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-period">Sem 2<br>Weeks 6–10</div>
+        <div class="timeline-content">
+          <div class="timeline-phase">Frontend & UI Development</div>
+          <div class="timeline-tasks">Admin dashboard, student mobile app, warden evacuation panel, parent portal, security alert panel.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-period">Sem 2<br>Weeks 11–14</div>
+        <div class="timeline-content">
+          <div class="timeline-phase">Integration, Testing & Deployment</div>
+          <div class="timeline-tasks">Full system integration, classroom deployment, user testing, bug fixes, performance tuning, final documentation and presentation.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. Requirements Met -->
+  <div class="section">
+    <div class="section-number">10</div>
+    <h2 class="section-title">Project Requirements Compliance</h2>
+    <p>The following table confirms that all mandatory project requirements are satisfied by the proposed design.</p>
+
+    <ul class="req-list">
+      <li>
+        <div class="req-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="req-text">All 5 members have sufficient work for 2 semesters</div>
+          <div class="req-note">5 feature modules across hardware, AI, cloud, and UI ensure full workload distribution</div>
+        </div>
+      </li>
+      <li>
+        <div class="req-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="req-text">Solves a real-world problem</div>
+          <div class="req-note">Addresses manual attendance, energy waste, and campus safety gaps</div>
+        </div>
+      </li>
+      <li>
+        <div class="req-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="req-text">Large scope</div>
+          <div class="req-note">6 feature modules spanning hardware, AI/ML, cloud, and 5 frontend interfaces</div>
+        </div>
+      </li>
+      <li>
+        <div class="req-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="req-text">Real-scale 1:1 deployment</div>
+          <div class="req-note">Deployed in an actual university classroom with physical hardware</div>
+        </div>
+      </li>
+      <li>
+        <div class="req-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="req-text">Uses a microcontroller</div>
+          <div class="req-note">ESP32-S3 × 2 units as the core embedded platform</div>
+        </div>
+      </li>
+      <li>
+        <div class="req-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="req-text">AI integrated</div>
+          <div class="req-note">TinyML on-device, cloud face recognition, dropout predictor, anomaly detection, environment ML</div>
+        </div>
+      </li>
+      <li>
+        <div class="req-check"><svg viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div>
+          <div class="req-text">Medium budget</div>
+          <div class="req-note">Total estimated cost of $172–$192 USD, within the medium budget range</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ══ FOOTER ══ -->
+<div class="doc-footer">
+  <span>Smart Classroom Attendance & Environment System</span>
+  <span>University IoT + AI Project — Ver. 1.0</span>
+  <span>Confidential — Internal Use Only</span>
+</div>
+
+</body>
+</html>

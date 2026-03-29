@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Practice questions</title>
+</head>
+
+<body>
+    <p>Here are solid answers for each:</p>
+    <hr>
+    <p><strong>"What sensors are used in relation to the idea?"</strong></p>
+    <p>There are five sensor types used in the system:</p>
+    <ul>
+        <li><strong>DHT22</strong> — measures temperature and humidity inside the classroom</li>
+        <li><strong>MQ135</strong> — measures CO₂ levels and air quality</li>
+        <li><strong>BH1750</strong> — measures ambient light level</li>
+        <li><strong>Sound sensor</strong> — measures noise level</li>
+        <li><strong>MQ2</strong> — detects smoke and fire</li>
+    </ul>
+    <p>Together these five give a complete picture of the classroom environment and safety status.</p>
+    <hr>
+    <p><strong>"Why are they used?"</strong></p>
+    <p>Each one maps directly to a feature:</p>
+    <ul>
+        <li>DHT22 + MQ135 → trigger the AC and fan via relay when the room gets hot or stuffy</li>
+        <li>BH1750 → controls the lights based on how bright or dark it is</li>
+        <li>Sound sensor → detects if the classroom is too noisy, feeds the environment model</li>
+        <li>MQ2 → triggers the emergency evacuation headcount when smoke or fire is detected</li>
+    </ul>
+    <p>None of them are there "just because" — each one drives a specific automated action.</p>
+    <hr>
+    <p><strong>"What is their current price?"</strong></p>
+    <table>
+        <thead>
+            <tr>
+                <th>Sensor</th>
+                <th>Price (Sri Lanka)</th>
+                <th>Source</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>DHT22</td>
+                <td>Rs. 1,160</td>
+                <td>tronic.lk</td>
+            </tr>
+            <tr>
+                <td>MQ135</td>
+                <td>Rs. 650</td>
+                <td>tronic.lk</td>
+            </tr>
+            <tr>
+                <td>BH1750</td>
+                <td>Rs. 490</td>
+                <td>tronic.lk</td>
+            </tr>
+            <tr>
+                <td>Sound Sensor</td>
+                <td>Rs. 330</td>
+                <td>tronic.lk</td>
+            </tr>
+            <tr>
+                <td>MQ2</td>
+                <td>Rs. 580</td>
+                <td>tronic.lk</td>
+            </tr>
+        </tbody>
+    </table>
+    <p>All five sensors together cost around <strong>Rs. 3,210</strong> for two units each.</p>
+    <hr>
+    <p><strong>"Why not use other sensors instead?"</strong></p>
+    <p>This is the one they'll push hardest on. Here's how to answer each:</p>
+    <p><strong>DHT22 vs DHT11:</strong>
+        DHT11 is cheaper (around Rs. 400) but only accurate to ±2°C. DHT22 gives ±0.5°C accuracy which matters when
+        you're making automated decisions about AC control. A 2 degree error could mean the AC never turns on or never
+        turns off.</p>
+    <p><strong>MQ135 vs MQ7 (carbon monoxide only):</strong>
+        MQ7 only detects CO. MQ135 detects CO₂, ammonia, benzene and general air quality — much more relevant for a
+        crowded classroom environment where CO₂ buildup from breathing is the main concern.</p>
+    <p><strong>BH1750 vs LDR (light dependent resistor):</strong>
+        An LDR gives a raw analog resistance reading — you'd have to calibrate it yourself and it drifts over time.
+        BH1750 gives a direct digital lux reading over I²C, much more accurate and consistent, and barely costs more.
+    </p>
+    <p><strong>MQ2 vs a dedicated smoke detector:</strong>
+        A standalone smoke detector just beeps — it can't send a signal to the ESP32-S3. MQ2 gives a digital output
+        directly to the microcontroller so the system can automatically trigger the evacuation headcount dashboard.
+        That's the whole point.</p>
+    <p><strong>Sound sensor vs a dedicated decibel meter:</strong>
+        A proper SPL meter costs Rs. 5,000+. The sound sensor module at Rs. 330 is enough to detect relative noise
+        levels for classroom management — we don't need precise decibel measurements, just a threshold trigger.</p>
+    <hr>
+    <p>Memorise the DHT22 vs DHT11 and BH1750 vs LDR comparisons especially — those are the most likely follow-ups.</p>
+</body>
+
+</html>
