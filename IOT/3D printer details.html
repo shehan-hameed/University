@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CoreXY 3D Printer — Project Proposal</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --surface2: #1a1a24;
+      --border: #2a2a3a;
+      --accent: #00e5ff;
+      --accent2: #ff6b35;
+      --accent3: #7c3aed;
+      --text: #e8e8f0;
+      --text-dim: #888899;
+      --green: #00ff88;
+      --red: #ff4444;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* GRID BACKGROUND */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* HEADER */
+    header {
+      padding: 4rem 0 3rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 200px;
+      height: 2px;
+      background: var(--accent);
+    }
+
+    .header-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .header-tag::before {
+      content: '';
+      width: 20px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 span {
+      color: var(--accent);
+    }
+
+    .header-meta {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .meta-item {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    .meta-item strong {
+      color: var(--text);
+      display: block;
+      font-size: 0.85rem;
+      margin-bottom: 0.2rem;
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--accent2);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      max-width: 60px;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--accent);
+    }
+
+    p {
+      color: var(--text-dim);
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+
+    /* CARDS */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 1.5rem;
+    }
+
+    .card {
+      background: var(--surface);
+      padding: 1.5rem;
+      transition: background 0.2s;
+    }
+
+    .card:hover {
+      background: var(--surface2);
+    }
+
+    .card-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    /* SPEC TABLE */
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+      font-size: 0.875rem;
+    }
+
+    .spec-table th {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .spec-table td {
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+
+    .spec-table td:first-child {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .spec-table tr:hover td {
+      background: var(--surface2);
+    }
+
+    /* BUDGET TABLE */
+    .budget-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+      font-size: 0.875rem;
+    }
+
+    .budget-table th {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      background: var(--surface2);
+      border-bottom: 2px solid var(--border);
+    }
+
+    .budget-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-dim);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+    }
+
+    .budget-table td:first-child {
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      font-size: 0.875rem;
+    }
+
+    .budget-table tr:hover td {
+      background: var(--surface2);
+    }
+
+    .budget-table .section-row td {
+      background: var(--surface2);
+      color: var(--accent2);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.5rem 1rem;
+    }
+
+    .budget-table .total-row td {
+      background: var(--accent);
+      color: var(--bg);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .budget-table .buffer-row td {
+      background: rgba(0, 255, 136, 0.1);
+      color: var(--green);
+    }
+
+    .lkr {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* SOURCE BADGES */
+    .badge {
+      display: inline-block;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 2px;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+    }
+
+    .badge-local {
+      background: rgba(0, 255, 136, 0.15);
+      color: var(--green);
+    }
+
+    .badge-import {
+      background: rgba(255, 107, 53, 0.15);
+      color: var(--accent2);
+    }
+
+    /* TIMELINE */
+    .timeline {
+      margin-top: 1.5rem;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent), var(--accent3));
+    }
+
+    .timeline-item {
+      padding-left: 2rem;
+      padding-bottom: 2rem;
+      position: relative;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 6px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg);
+    }
+
+    .timeline-month {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.25rem;
+    }
+
+    .timeline-title {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-desc {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+
+    /* TEAM TABLE */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 1.5rem;
+    }
+
+    .team-card {
+      background: var(--surface);
+      padding: 1.25rem;
+    }
+
+    .team-role {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--accent2);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .team-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .team-task {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
+    /* HIGHLIGHT BOX */
+    .highlight-box {
+      border: 1px solid var(--accent);
+      background: rgba(0, 229, 255, 0.05);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      position: relative;
+    }
+
+    .highlight-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--accent);
+    }
+
+    /* WARNING BOX */
+    .warning-box {
+      border: 1px solid var(--accent2);
+      background: rgba(255, 107, 53, 0.05);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      position: relative;
+    }
+
+    .warning-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--accent2);
+    }
+
+    .warning-box p {
+      color: var(--accent2);
+      margin: 0;
+      font-size: 0.875rem;
+    }
+
+    /* SOURCING TABLE */
+    .source-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 1.5rem;
+    }
+
+    .source-col {
+      background: var(--surface);
+      padding: 1.5rem;
+    }
+
+    .source-col h3 {
+      margin-bottom: 1rem;
+    }
+
+    .source-list {
+      list-style: none;
+    }
+
+    .source-list li {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      padding: 0.4rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .source-list li::before {
+      content: '→';
+      color: var(--accent);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 3rem 0;
+      text-align: center;
+    }
+
+    footer p {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+    }
+
+    /* NUMBER HIGHLIGHT */
+    .num {
+      font-family: 'Space Mono', monospace;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    @media (max-width: 600px) {
+      .source-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .header-meta {
+        flex-direction: column;
+        gap: 1rem;
+      }
+    }
+
+    /* PRINT */
+    @media print {
+      body {
+        background: white;
+        color: black;
+      }
+
+      body::before {
+        display: none;
+      }
+
+      .card,
+      .source-col,
+      .team-card {
+        border: 1px solid #ccc;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- HEADER -->
+    <header>
+      <div class="header-tag">University Project Proposal — B25 FIT Level 01</div>
+      <h1>CoreXY<br><span>3D Printer</span></h1>
+      <p style="color: var(--text-dim); max-width: 600px; font-size: 1rem;">
+        A DIY 300×300mm CoreXY 3D printer built from scratch as a 2-semester university group project. Designed to
+        demonstrate engineering principles across mechanical design, electronics, firmware, and software.
+      </p>
+      <div class="header-meta">
+        <div class="meta-item"><strong>Build Volume</strong>300 × 300 × 300 mm</div>
+        <div class="meta-item"><strong>Printer Type</strong>CoreXY Kinematics</div>
+        <div class="meta-item"><strong>Duration</strong>2 Semesters</div>
+        <div class="meta-item"><strong>Team Size</strong>5 Members</div>
+        <div class="meta-item"><strong>Total Budget</strong>≤ LKR 100,000</div>
+        <div class="meta-item"><strong>Est. Cost</strong>~ LKR 83,400</div>
+      </div>
+    </header>
+
+    <!-- PROJECT OVERVIEW -->
+    <section>
+      <div class="section-label">01 — Overview</div>
+      <h2>Project Overview</h2>
+      <p>
+        This project involves the complete design and construction of a CoreXY-kinematics FDM (Fused Deposition
+        Modelling) 3D printer with a 300×300mm print bed from the ground up. The team will handle all aspects of the
+        build including mechanical assembly, electronics wiring, firmware configuration (Klipper), and software setup —
+        creating a functional, calibrated machine capable of producing high-quality prints.
+      </p>
+      <p>
+        Unlike purchasing a commercial printer, this project develops hands-on skills in mechanical engineering,
+        embedded systems, motion control, and open-source software — making it a uniquely educational and original
+        undertaking.
+      </p>
+
+      <div class="highlight-box">
+        <h3>Why CoreXY?</h3>
+        <p style="margin:0; color: var(--text-dim); font-size:0.9rem;">In a CoreXY design, the print bed only moves
+          vertically (Z axis) while the printhead moves on X and Y using a crossed belt system driven by two stationary
+          motors. This dramatically reduces moving mass, enabling higher print speeds, better acceleration, and a larger
+          build volume — ideal for a university-level engineering project that showcases advanced kinematics.</p>
+      </div>
+    </section>
+
+    <!-- TECHNICAL SPECS -->
+    <section>
+      <div class="section-label">02 — Specifications</div>
+      <h2>Technical Specifications</h2>
+
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Specification</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Print Volume</td>
+            <td>300 × 300 × 300 mm</td>
+            <td>X × Y × Z</td>
+          </tr>
+          <tr>
+            <td>Kinematics</td>
+            <td>CoreXY</td>
+            <td>Crossed belt, dual motor</td>
+          </tr>
+          <tr>
+            <td>Frame</td>
+            <td>2020 Aluminium Extrusion</td>
+            <td>T-slot, modular</td>
+          </tr>
+          <tr>
+            <td>Linear Motion (X/Y)</td>
+            <td>MGN12 Linear Rails</td>
+            <td>3 × 300mm rails</td>
+          </tr>
+          <tr>
+            <td>Linear Motion (Z)</td>
+            <td>MGN12 + T8 Lead Screw</td>
+            <td>Dual Z, 400mm</td>
+          </tr>
+          <tr>
+            <td>Stepper Motors</td>
+            <td>NEMA 17 (5×)</td>
+            <td>X, Y, Z×2, Extruder</td>
+          </tr>
+          <tr>
+            <td>Stepper Drivers</td>
+            <td>TMC2209 (silent)</td>
+            <td>Integrated on controller</td>
+          </tr>
+          <tr>
+            <td>Controller Board</td>
+            <td>BTT SKR Mini E3 V3</td>
+            <td>32-bit, STM32G0</td>
+          </tr>
+          <tr>
+            <td>Firmware</td>
+            <td>Klipper</td>
+            <td>Runs on Raspberry Pi 3B+</td>
+          </tr>
+          <tr>
+            <td>Extruder</td>
+            <td>BMG Dual Drive (clone)</td>
+            <td>Direct drive</td>
+          </tr>
+          <tr>
+            <td>Hotend</td>
+            <td>E3D V6 Clone</td>
+            <td>All-metal, 1.75mm filament</td>
+          </tr>
+          <tr>
+            <td>Max Hotend Temp</td>
+            <td>~260°C</td>
+            <td>Supports PLA, PETG, ABS</td>
+          </tr>
+          <tr>
+            <td>Heated Bed</td>
+            <td>300×300mm, 24V</td>
+            <td>PEI spring steel surface</td>
+          </tr>
+          <tr>
+            <td>Max Bed Temp</td>
+            <td>~110°C</td>
+            <td>Suitable for ABS/PETG</td>
+          </tr>
+          <tr>
+            <td>Bed Levelling</td>
+            <td>BLTouch (auto)</td>
+            <td>Mesh compensation</td>
+          </tr>
+          <tr>
+            <td>Power Supply</td>
+            <td>24V 15A (360W)</td>
+            <td>ATX style</td>
+          </tr>
+          <tr>
+            <td>Display</td>
+            <td>TFT35 Touchscreen</td>
+            <td>3.5" colour display</td>
+          </tr>
+          <tr>
+            <td>Connectivity</td>
+            <td>Wi-Fi (via Raspberry Pi)</td>
+            <td>Klipper web interface</td>
+          </tr>
+          <tr>
+            <td>Belt</td>
+            <td>GT2 6mm, Gates-spec</td>
+            <td>~3m required</td>
+          </tr>
+          <tr>
+            <td>Layer Resolution</td>
+            <td>0.05 – 0.35mm</td>
+            <td>Software configurable</td>
+          </tr>
+          <tr>
+            <td>Print Speed (target)</td>
+            <td>60 – 120 mm/s</td>
+            <td>Depends on calibration</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- KEY COMPONENTS -->
+    <section>
+      <div class="section-label">03 — Components</div>
+      <h2>Key Component Groups</h2>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🔩</div>
+          <h3>Frame & Motion</h3>
+          <p>2020 aluminium extrusion forms a rigid cubic frame. MGN12 linear rails on all axes provide smooth, precise
+            movement. T8 lead screws drive the Z axis vertically.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <h3>Electronics</h3>
+          <p>BTT SKR Mini E3 V3 controller board with integrated TMC2209 silent stepper drivers. 5× NEMA 17 stepper
+            motors. 24V 15A power supply for high-current bed heating.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔥</div>
+          <h3>Hotend & Extruder</h3>
+          <p>E3D V6 all-metal hotend supports temperatures up to 260°C. BMG dual-drive extruder provides precise
+            filament control. 5015 blower for part cooling.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🖥️</div>
+          <h3>Firmware & Software</h3>
+          <p>Klipper firmware running on Raspberry Pi 3B+ enables advanced features: input shaping, pressure advance,
+            web interface (Mainsail/Fluidd), and remote monitoring.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📐</div>
+          <h3>Bed System</h3>
+          <p>300×300mm 24V heated bed with PEI spring steel print surface. BLTouch probe enables automatic mesh bed
+            levelling — compensates for any warp or tilt automatically.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌐</div>
+          <h3>Remote Control</h3>
+          <p>Klipper's web interface (Mainsail) allows full printer control over Wi-Fi from any browser — start prints,
+            monitor temperatures, adjust settings in real time.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- BUDGET -->
+    <section>
+      <div class="section-label">04 — Budget</div>
+      <h2>Full Component Budget</h2>
+
+      <table class="budget-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Component</th>
+            <th>Qty</th>
+            <th>Unit (LKR)</th>
+            <th>Total (LKR)</th>
+            <th>Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="section-row">
+            <td colspan="6">Frame & Motion</td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>2020 Aluminium Extrusion (various lengths)</td>
+            <td>~10 pcs</td>
+            <td class="lkr">600</td>
+            <td class="lkr">6,000</td>
+            <td><span class="badge badge-local">Local</span></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>MGN12 Linear Rail 300mm (X/Y axes)</td>
+            <td>3</td>
+            <td class="lkr">2,500</td>
+            <td class="lkr">7,500</td>
+            <td><span class="badge badge-import">AliExpress</span></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>MGN12 Linear Rail 400mm (Z axis)</td>
+            <td>2</td>
+            <td class="lkr">3,000</td>
+            <td class="lkr">6,000</td>
+            <td><span class="badge badge-import">AliExpress</span></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>T8 Lead Screw 400mm + Nut (Z axis)</td>
+            <td>2</td>
+            <td class="lkr">1,200</td>
+            <td class="lkr">2,400</td>
+            <td><span class="badge badge-import">AliExpress</span></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>GT2 Belt 6mm</td>
+            <td>3m</td>
+            <td class="lkr">500</td>
+            <td class="lkr">1,500</td>
+            <td><span class="badge badge-local">Duino.lk</span></td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>GT2 20T Pulleys + Idlers (set)</td>
+            <td>1 set</td>
+            <td class="lkr">1,500</td>
+            <td class="lkr">1,500</td>
+            <td><span class="badge badge-local">Duino.lk</span></td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Corner Brackets, T-nuts, M3/M5 Bolts</td>
+            <td>1 set</td>
+            <td class="lkr">2,000</td>
+            <td class="lkr">2,000</td>
+            <td><span class="badge badge-local">Pettah Hardware</span></td>
+          </tr>
+
+          <tr class="section-row">
+            <td colspan="6">Electronics</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>BTT SKR Mini E3 V3 Controller Board</td>
+            <td>1</td>
+            <td class="lkr">7,500</td>
+            <td class="lkr">7,500</td>
+            <td><span class="badge badge-import">AliExpress</span></td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>NEMA 17 Stepper Motors</td>
+            <td>5</td>
+            <td class="lkr">2,000</td>
+            <td class="lkr">10,000</td>
+            <td><span class="badge badge-local">Duino.lk / Tronic.lk</span></td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>24V 15A Power Supply</td>
+            <td>1</td>
+            <td class="lkr">4,500</td>
+            <td class="lkr">4,500</td>
+            <td><span class="badge badge-import">AliExpress / Daraz</span></td>
+          </tr>
+          <tr>
+            <td>11</td>
+            <td>300×300mm Heated Bed (24V)</td>
+            <td>1</td>
+            <td class="lkr">5,000</td>
+            <td class="lkr">5,000</td>
+            <td><span class="badge badge-import">AliExpress</span></td>
+          </tr>
+          <tr>
+            <td>12</td>
+            <td>PEI Spring Steel Sheet 300×300mm</td>
+            <td>1</td>
+            <td class="lkr">2,500</td>
+            <td class="lkr">2,500</td>
+            <td><span class="badge badge-import">AliExpress</span></td>
+          </tr>
+          <tr>
+            <td>13</td>
+            <td>BLTouch Auto Bed Levelling Sensor</td>
+            <td>1</td>
+            <td class="lkr">3,500</td>
+            <td class="lkr">3,500</td>
+            <td><span class="badge badge-import">AliExpress</span></td>
+          </tr>
+          <tr>
+            <td>14</td>
+            <td>Endstop Switches</td>
+            <td>3</td>
+            <td class="lkr">200</td>
+            <td class="lkr">600</td>
+            <td><span class="badge badge-local">Duino.lk</span></td>
+          </tr>
+
+          <tr class="section-row">
+            <td colspan="6">Hotend & Extruder</td>
+          </tr>
+          <tr>
+            <td>15</td>
+            <td>E3D V6 Hotend Clone (All-metal)</td>
+            <td>1</td>
+            <td class="lkr">2,500</td>
+            <td class="lkr">2,500</td>
+            <td><span class="badge badge-local">Duino.lk</span></td>
+          </tr>
+          <tr>
+            <td>16</td>
+            <td>BMG Dual Drive Extruder Clone</td>
+            <td>1</td>
+            <td class="lkr">2,000</td>
+            <td class="lkr">2,000</td>
+            <td><span class="badge badge-import">AliExpress</span></td>
+          </tr>
+          <tr>
+            <td>17</td>
+            <td>5015 Part Cooling Blower Fan</td>
+            <td>1</td>
+            <td class="lkr">800</td>
+            <td class="lkr">800</td>
+            <td><span class="badge badge-local">Duino.lk</span></td>
+          </tr>
+          <tr>
+            <td>18</td>
+            <td>4010 Hotend Cooling Fan</td>
+            <td>1</td>
+            <td class="lkr">500</td>
+            <td class="lkr">500</td>
+            <td><span class="badge badge-local">Duino.lk</span></td>
+          </tr>
+
+          <tr class="section-row">
+            <td colspan="6">Display & Extras</td>
+          </tr>
+          <tr>
+            <td>19</td>
+            <td>TFT35 Touchscreen Display</td>
+            <td>1</td>
+            <td class="lkr">3,500</td>
+            <td class="lkr">3,500</td>
+            <td><span class="badge badge-import">AliExpress</span></td>
+          </tr>
+          <tr>
+            <td>20</td>
+            <td>Raspberry Pi 3B+</td>
+            <td>1</td>
+            <td class="lkr">8,000</td>
+            <td class="lkr">8,000</td>
+            <td><span class="badge badge-local">Daraz.lk</span></td>
+          </tr>
+          <tr>
+            <td>21</td>
+            <td>Cable Drag Chains</td>
+            <td>2</td>
+            <td class="lkr">800</td>
+            <td class="lkr">1,600</td>
+            <td><span class="badge badge-import">AliExpress</span></td>
+          </tr>
+          <tr>
+            <td>22</td>
+            <td>Wiring, Connectors, Ferrules</td>
+            <td>1 lot</td>
+            <td class="lkr">—</td>
+            <td class="lkr">1,500</td>
+            <td><span class="badge badge-local">Local</span></td>
+          </tr>
+          <tr>
+            <td>23</td>
+            <td>3D Printed Parts (brackets, mounts)</td>
+            <td>1 set</td>
+            <td class="lkr">—</td>
+            <td class="lkr">2,000</td>
+            <td><span class="badge badge-local">Print locally</span></td>
+          </tr>
+
+          <tr class="total-row">
+            <td colspan="4">TOTAL ESTIMATED COST</td>
+            <td>LKR 83,400</td>
+            <td>~USD 265</td>
+          </tr>
+          <tr class="buffer-row">
+            <td colspan="4">REMAINING BUDGET BUFFER</td>
+            <td>LKR 16,600</td>
+            <td>✅ Within LKR 100,000</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- SOURCING STRATEGY -->
+    <section>
+      <div class="section-label">05 — Sourcing</div>
+      <h2>Parts Sourcing Strategy</h2>
+
+      <div class="warning-box">
+        <p>⚠️ <strong>Order AliExpress parts immediately</strong> — linear rails, controller board, heated bed, BLTouch,
+          and PEI sheet take 3–5 weeks to arrive. Place international orders before buying local parts.</p>
+      </div>
+
+      <div class="source-grid">
+        <div class="source-col">
+          <h3 style="color: var(--green);">✅ Available Locally</h3>
+          <ul class="source-list">
+            <li>NEMA 17 Stepper Motors — Duino.lk / Tronic.lk</li>
+            <li>E3D V6 Hotend — Duino.lk</li>
+            <li>GT2 Belts & Pulleys — Duino.lk</li>
+            <li>Endstop Switches — Duino.lk</li>
+            <li>Cooling Fans — Duino.lk</li>
+            <li>Raspberry Pi 3B+ — Daraz.lk</li>
+            <li>2020 Aluminium Extrusion — Pettah hardware shops</li>
+            <li>Bolts, nuts, T-nuts — Pettah / Maradana hardware</li>
+            <li>Wiring & Connectors — Any electronics store</li>
+          </ul>
+        </div>
+        <div class="source-col">
+          <h3 style="color: var(--accent2);">📦 Must Import (AliExpress)</h3>
+          <ul class="source-list">
+            <li>BTT SKR Mini E3 V3 Controller Board</li>
+            <li>MGN12 Linear Rails (300mm + 400mm)</li>
+            <li>300×300mm Heated Bed (24V)</li>
+            <li>PEI Spring Steel Sheet</li>
+            <li>BLTouch Auto Levelling Sensor</li>
+            <li>BMG Dual Drive Extruder Clone</li>
+            <li>T8 Lead Screws (400mm)</li>
+            <li>TFT35 Touchscreen Display</li>
+            <li>Cable Drag Chains</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- TEAM -->
+    <section>
+      <div class="section-label">06 — Team</div>
+      <h2>Team Responsibilities</h2>
+
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-role">AI Specialist</div>
+          <div class="team-name">Member 1</div>
+          <div class="team-task">Klipper firmware configuration, input shaping, pressure advance tuning, AI-assisted
+            print optimisation</div>
+        </div>
+        <div class="team-card">
+          <div class="team-role">IT Specialist</div>
+          <div class="team-name">Member 2</div>
+          <div class="team-task">Raspberry Pi setup, Mainsail/Fluidd web interface, network configuration, remote
+            monitoring</div>
+        </div>
+        <div class="team-card">
+          <div class="team-role">ITM — Mechanical</div>
+          <div class="team-name">Member 3</div>
+          <div class="team-task">Frame assembly, linear rail installation, belt tensioning, squaring and alignment</div>
+        </div>
+        <div class="team-card">
+          <div class="team-role">ITM — Electronics</div>
+          <div class="team-name">Member 4</div>
+          <div class="team-task">Wiring, stepper motor connections, endstop wiring, power supply setup, BLTouch
+            installation</div>
+        </div>
+        <div class="team-card">
+          <div class="team-role">ITM — Documentation</div>
+          <div class="team-name">Member 5</div>
+          <div class="team-task">Project documentation, CAD drawings, assembly guide, testing records, final report
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section>
+      <div class="section-label">07 — Timeline</div>
+      <h2>Project Timeline (2 Semesters)</h2>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-month">Month 1 — Semester 1</div>
+          <div class="timeline-title">Planning & Procurement</div>
+          <div class="timeline-desc">Finalise design, order AliExpress parts (3–5 week lead time), source local parts,
+            create CAD drawings, assign roles, set up GitHub repository.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-month">Month 2</div>
+          <div class="timeline-title">Frame Assembly</div>
+          <div class="timeline-desc">Assemble 2020 aluminium extrusion frame, install MGN12 linear rails, mount Z axis
+            lead screws, verify squareness with diagonal measurements.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-month">Month 3</div>
+          <div class="timeline-title">Motion System & Electronics</div>
+          <div class="timeline-desc">Install CoreXY belt system, mount NEMA 17 motors, wire controller board, power
+            supply, endstops, and stepper drivers. First manual movement test.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-month">Month 4</div>
+          <div class="timeline-title">Hotend, Bed & Firmware</div>
+          <div class="timeline-desc">Install heated bed, E3D V6 hotend, BMG extruder, BLTouch. Flash Klipper firmware on
+            Raspberry Pi. Configure kinematics, steps/mm, PID tuning.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-month">Month 5 — Semester 2</div>
+          <div class="timeline-title">Calibration & First Print</div>
+          <div class="timeline-desc">Auto bed levelling mesh setup, Z offset calibration, first test prints (calibration
+            cube). Identify and fix any mechanical or firmware issues.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-month">Month 6</div>
+          <div class="timeline-title">Tuning & Optimisation</div>
+          <div class="timeline-desc">Input shaping (resonance compensation), pressure advance tuning, flow rate
+            calibration, temperature towers. Achieve consistent print quality.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-month">Month 7–8</div>
+          <div class="timeline-title">Final Demonstration & Documentation</div>
+          <div class="timeline-desc">Print demonstration objects, compile full documentation, technical report, assembly
+            guide. Final presentation and project submission.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ORIGINALITY -->
+    <section>
+      <div class="section-label">08 — Originality</div>
+      <h2>Original Contributions</h2>
+      <p>This project goes beyond following a kit — the team designs, assembles, and configures every system from
+        scratch. Key original contributions include:</p>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">⚙️</div>
+          <h3>Custom Mechanical Design</h3>
+          <p>The frame, rail positions, and toolhead mount will be custom designed in CAD to fit the exact 300×300mm
+            build volume — not a copy of any existing design.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧠</div>
+          <h3>Klipper + Input Shaping</h3>
+          <p>Advanced Klipper firmware features like input shaping (ADXL345 accelerometer) and pressure advance are not
+            standard on most commercial printers — this demonstrates graduate-level tuning.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📡</div>
+          <h3>Remote Monitoring Dashboard</h3>
+          <p>A custom Mainsail/Fluidd web interface with macros, print statistics, and camera monitoring will be
+            implemented and documented as an original software contribution.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📋</div>
+          <h3>Full Build Documentation</h3>
+          <p>A complete assembly manual, wiring diagrams, firmware config files, and calibration guide will be produced
+            — usable by future students as a reference.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPECTED OUTCOMES -->
+    <section>
+      <div class="section-label">09 — Outcomes</div>
+      <h2>Expected Outcomes</h2>
+
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th>Outcome</th>
+            <th>Metric</th>
+            <th>Target</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Printer Functionality</td>
+            <td>Successfully prints test objects</td>
+            <td>✅ Calibration cube, benchy</td>
+          </tr>
+          <tr>
+            <td>Print Quality</td>
+            <td>Layer consistency</td>
+            <td>≤ 0.2mm layer height, no stringing</td>
+          </tr>
+          <tr>
+            <td>Print Speed</td>
+            <td>mm/s</td>
+            <td>60–120 mm/s</td>
+          </tr>
+          <tr>
+            <td>Bed Levelling</td>
+            <td>Auto mesh compensation</td>
+            <td>±0.1mm tolerance</td>
+          </tr>
+          <tr>
+            <td>Remote Control</td>
+            <td>Web interface operational</td>
+            <td>Accessible over Wi-Fi</td>
+          </tr>
+          <tr>
+            <td>Budget Compliance</td>
+            <td>Total spend</td>
+            <td>≤ LKR 100,000</td>
+          </tr>
+          <tr>
+            <td>Documentation</td>
+            <td>Pages of technical documentation</td>
+            <td>≥ 30 pages</td>
+          </tr>
+          <tr>
+            <td>Build Time</td>
+            <td>Completion within semester 2</td>
+            <td>Month 7 deadline</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>B25 FIT Level 01 — University Group Project Proposal — CoreXY 3D Printer</p>
+      <p style="margin-top: 0.5rem; color: #444;">Generated for academic submission purposes</p>
+    </footer>
+
+  </div>
+</body>
+
+</html>
