@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Activity 10</title>
+</head>
+<body>
+    <script>
+        // Mock date: Setting a course start date with a distinct time (09:30 AM)
+        let courseStart = new Date("2026-06-15T09:30:00");
+        
+        // Extracting localized formatting showing only the time window
+        let startTime = courseStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        document.write("The course begins at: <strong>" + startTime + "</strong>");
+    </script>
+</body>
+</html>

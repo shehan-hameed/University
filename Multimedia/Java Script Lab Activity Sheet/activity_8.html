@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Activity 08</title>
+</head>
+<body>
+
+    <button onclick="alert('Button was clicked!')">Click Me</button>
+    
+    <br><br>
+
+    <p id="interactiveParagraph" 
+       onmouseover="changeText()" 
+       onmouseout="resetText()" 
+       style="display: inline-block; padding: 10px; background-color: #f0f0f0; cursor: pointer;">
+        Hover over this text!
+    </p>
+
+    <script>
+        function changeText() {
+            document.getElementById("interactiveParagraph").innerHTML = "The mouse is over me!";
+        }
+
+        function resetText() {
+            document.getElementById("interactiveParagraph").innerHTML = "Hover over this text!";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Activity 09</title>
+</head>
+<body>
+    <script>
+        // Mock date: Setting a course start date (June 15, 2026)
+        let courseStart = new Date("2026-06-15T09:00:00");
+        
+        // Days dictionary array
+        let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        
+        // Extracting day index number (0-6)
+        let dayOfWeek = days[courseStart.getDay()];
+        
+        document.write("The course begins on a: <strong>" + dayOfWeek + "</strong>");
+    </script>
+</body>
+</html>

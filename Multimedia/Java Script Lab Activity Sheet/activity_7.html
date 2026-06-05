@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Activity 07</title>
+</head>
+<body>
+
+<script>
+  // Step 1 — alert: show a welcome message
+  alert("Welcome to my JavaScript program!");
+
+  // Step 2 — prompt: ask for the user's name (returns a string or null)
+  const name = prompt("What is your name?");
+
+  // Step 3 — confirm: ask if they like JavaScript (returns true or false)
+  const likesJS = confirm("Do you like JavaScript?");
+
+  // Step 4 — document.write: display the results on the page
+  document.write("<h2>Your answers</h2>");
+  document.write("<p><strong>Name:</strong> " + (name || "not provided") + "</p>");
+  document.write("<p><strong>Likes JavaScript:</strong> " + (likesJS ? "Yes" : "No") + "</p>");
+</script>
+
+</body>
+</html>
