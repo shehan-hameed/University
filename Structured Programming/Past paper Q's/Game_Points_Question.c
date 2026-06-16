@@ -9,6 +9,8 @@
          return -1;
      }
      int weeks = (target + weekly -1) / weekly;
+     /*By adding (weeklyPointsEarned - 1) to the numerator before dividing, you nudge
+     any remainder over the edge to the next whole number.*/
      return weeks;
  }
  
