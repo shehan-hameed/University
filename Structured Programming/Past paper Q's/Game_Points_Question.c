@@ -31,13 +31,21 @@
          scanf("%d", &adj);
          adj = -adj;
      }
+    else {
+    printf("Invalid choice. No adjustment applied.\n");
+    }
+    
+    int totalPoints = weeklyPoints(base, adj);
+    printf("Total weekly points: %d\n", totalPoints);
      
-     int totalPoints = weeklyPoints(base, adj);
+    int totalWeeks = weekToReward(totalPoints, target);
      
-     int totalWeeks = weekToReward(totalPoints, target);
-     
-     printf("Total weekly points: %d\n", totalPoints);
-     printf("Number of week for reward: %d", totalWeeks);
+     if(totalWeeks == -1){
+        printf("Cannot reach reward with 0 or negative points.\n");
+    } 
+    else {
+        printf("Number of weeks for reward: %d\n", totalWeeks);
+    }
      
      return 0;
  }
