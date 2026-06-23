@@ -1,5 +1,15 @@
-alert("It works!");
-console.log("Hello from script.js");
+ let para = document.getElementById("greeting");
+para.textContent = "Hello, Shehan!"; // changes the paragraph text
 
-var userNumber = 50
-var productPrice = "Product_Price = $" + userNumber
+ alert("You must fill in your name!");
+ // "window." is optional — alert() alone works too
+ alert("Same thing!");
+
+ let age = 20;
+ console.log(age);           // 20
+ console.log("Age is:", age); // Age is: 20
+
+ let scores = [85, 90, 78];
+ console.log(scores);        // [85, 90, 78]
+
+ //*********************
